@@ -16,7 +16,7 @@ make install
 # Usage
 
 ## Create Main Application Listener
-```
+```java
 public class MyAppListener extends MesosAppListener {
   
   public void disconnected(AppFramework app){
