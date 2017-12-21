@@ -13,3 +13,23 @@ cd catapult
 make install
 ```
 
+# Usage
+
+## Create Main Application Listener
+```
+public class MyAppListener extends MesosAppListener {
+  
+  public void disconnected(AppFramework app){
+    ...
+  }
+  
+  public void connected(AppFramework app){
+    ...
+  }
+  
+  public void applicationFailed(AppFramework app){
+    ...
+  }
+}
+```
+
