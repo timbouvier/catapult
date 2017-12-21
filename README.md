@@ -14,7 +14,7 @@ make install
 ```
 
 # Usage
-There are three main pieces to an application
+There are three main pieces to crafting a catapult application
   - SchedulerNode
     - A java object you will extend to implement any node level logic and event processing
   - SchedulerApp
