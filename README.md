@@ -64,6 +64,15 @@ public class MyApplication extends SchedulerApp {
      MyNode node = new MyNode();
      appDriver.launchNode(node);
    }
+   
+   @Override
+   public void initFailed(){
+    /*
+    no driver supplied because it failed to create it
+    Most common reason for this to happen is if zookeeper 
+    or mesos environment variables are misconfigured
+    */
+   }
 }
 ```
 There are additional methods that can be overriden but the default implementations are almost always what you want. For instance, "message" can be overriden but its default implementation delivers the message to the schedulerNode object to which it belongs.
