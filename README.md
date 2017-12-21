@@ -52,7 +52,7 @@ public class MyNode extends SchedulerNode {
    }
 }
 ```
-The schedulerNode callbacks are events for pretty much what they look like they're events for. The message callback is a communication channel between the SchedulerNode and the AppExecutor (what running on the physical node).
+The schedulerNode callbacks are events for pretty much what they look like they're events for. The message callback is a communication channel between the SchedulerNode and the AppExecutor (what's running on the physical node).
 
 #### Create Scheduler Application Listener
 ```java
