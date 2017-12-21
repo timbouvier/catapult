@@ -14,10 +14,56 @@ make install
 ```
 
 # Usage
+There are three main pieces to an application
+  - SchedulerNode
+    - A java object you will extend to implement any node level logic and process events
+  - SchedulerApp
+    - A java object you will extend to implement any app level logic and process events
+  - MesosAppListener
+    - A java object you will extend to implement any framework level logic and process events
 
-#### Create Main Application Listener
+#### Create Scheduler Node Listener
 ```java
-public class MyAppListener extends MesosAppListener {
+public class MyNode extends SchedulerNode {
+
+   @Override
+   public void failed(AppDriver appDriver){
+      /*default implementation will relaunch node*/
+   }
+   
+   @Override
+   public void running(AppDriver appDriver){
+     /*default implementation does nothing*/
+   }
+   
+   @Override
+   public void finished(AppDriver appDriver){
+    /*default implementation does nothing*/
+   }
+   
+   @Override
+   public void killed(AppDriver appDriver){
+     /*default implementation relaunches node*/
+   }
+}
+```
+
+#### Create Scheduler Application Listener
+```java
+public class MyApplication extends SchedulerApp {
+  
+   @Override
+   public void initialized(AppDriver appDriver, Protos.AppID appID){
+     /*Start launching nodes*/
+     MyNode node = new MyNode();
+     appDriver.launchNode(node);
+   }
+}
+```
+
+#### Create Main Framework Listener
+```java
+public class MyFrameworkListener extends MesosAppListener {
   
   public void disconnected(AppFramework app){
     ...
@@ -32,4 +78,5 @@ public class MyAppListener extends MesosAppListener {
   }
 }
 ```
+
 
