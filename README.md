@@ -20,7 +20,7 @@ There are three main pieces to an application
   - SchedulerApp
     - A java object you will extend to implement any app level logic and event processing
   - MesosAppListener
-    - A java object you will extend to implement any framework level logic and event processing
+    - A java interface you will implement to handle any framework level logic and event processing
 
 #### Create Scheduler Node Listener
 ```java
