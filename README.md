@@ -16,11 +16,11 @@ make install
 # Usage
 There are three main pieces to an application
   - SchedulerNode
-    - A java object you will extend to implement any node level logic and process events
+    - A java object you will extend to implement any node level logic and event processing
   - SchedulerApp
-    - A java object you will extend to implement any app level logic and process events
+    - A java object you will extend to implement any app level logic and event processing
   - MesosAppListener
-    - A java object you will extend to implement any framework level logic and process events
+    - A java object you will extend to implement any framework level logic and event processing
 
 #### Create Scheduler Node Listener
 ```java
@@ -45,6 +45,11 @@ public class MyNode extends SchedulerNode {
    public void killed(AppDriver appDriver){
      /*default implementation relaunches node*/
    }
+   
+   @Override 
+   public void message(AppDriver appDriver, byte[] data){
+     /*default implementation drops message*/
+   }
 }
 ```
 
@@ -60,6 +65,7 @@ public class MyApplication extends SchedulerApp {
    }
 }
 ```
+There are additional methods that can be overriden but default implementation are almost always what you want. For instance, message
 
 #### Create Main Framework Listener
 ```java
