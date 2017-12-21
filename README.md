@@ -52,6 +52,7 @@ public class MyNode extends SchedulerNode {
    }
 }
 ```
+The schedulerNode callbacks are events for pretty much what they look like they're events for. The message callback is a communication channel between the SchedulerNode and the AppExecutor (what running on the physical node).
 
 #### Create Scheduler Application Listener
 ```java
@@ -65,24 +66,55 @@ public class MyApplication extends SchedulerApp {
    }
 }
 ```
-There are additional methods that can be overriden but default implementation are almost always what you want. For instance, message
+There are additional methods that can be overriden but the default implementations are almost always what you want. For instance, "message" can be overriden but its default implementation delivers the message to the schedulerNode object to which it belongs.
 
 #### Create Main Framework Listener
 ```java
-public class MyFrameworkListener extends MesosAppListener {
+public class MyFrameworkListener implements MesosAppListener {
   
-  public void disconnected(AppFramework app){
+  public void disconnected(AppFramework appFramework){
     ...
   }
   
-  public void connected(AppFramework app){
-    ...
+  public void connected(AppFramework appFramework){
+    /*start deploying apps!*/
+    MyApplication app = new MyApplication();
+    appFramework.register(app);
   }
   
-  public void applicationFailed(AppFramework app){
+  public void applicationFailed(AppFramework appFramework){
     ...
   }
 }
 ```
+Once the connected callback fires you can safely assume the library is initialized an ready to receive API callins.
+
+#### Putting it All Together
+```java
+import com.verizon.mesos.MesosAppFramework;
+import com.tbouvier.mesos.scheduler.Protos;
+
+public class Main {
+
+  public static void main(String[] args){
+    Protos.SchedulerConfig schedulerConfig = Protos.SchedulerConfig.newBuilder()
+             .setZooKeeperInfo(Protos.ZookeeperInfo.newBuilder()
+                     .setAddress("zk://my-zookeeper-ip-list")
+                     .setRootNode("framework-root-zk-node-name")
+                      .build())
+             .setMesosInfo(Protos.MesosInfo.newBuilder()
+                     .setAddress("zk://my-zookeeper-ip-list/mesos/")
+                     .build())
+             .setFrameworkName("my-framework")
+             .build();
+    
+    MyFrameworkListener myFramework = new MyFrameworkListener();
+    new MesosAppFramework(schedulerConfig, myFramework).run();
+  }
+}
+```
+Supply your mesos environment and mesos app listener objects, call run() and you good to go.
+
+
 
 
