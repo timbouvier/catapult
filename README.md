@@ -12,6 +12,14 @@ git clone https://github.com/timbouvier/catapult.git
 cd catapult
 make install
 ```
+After the install completes you can then import the catapult library to your project using a maven dependency.
+```xml
+<dependency>
+   <groupId>com.verizon.mesos</groupId>
+   <artifactId>vzdb</artifactId>
+   <version>1.0-SNAPSHOT</version>
+</dependency>
+```
 
 # Usage
 The major components of each catapult application are outlined below. 
