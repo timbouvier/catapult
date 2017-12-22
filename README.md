@@ -14,17 +14,28 @@ make install
 ```
 
 # Usage
-There are three main pieces to crafting a catapult application
-  - SchedulerNode
-    - A java object you will extend to implement any node level logic and event processing
-  - SchedulerApp
-    - A java object you will extend to implement any app level logic and event processing
-  - MesosAppListener
-    - A java interface you will implement to handle any framework level logic and event processing
+The major components of each catapult application are outlined below. 
+  - Scheduler
+    - SchedulerNode
+      - An object you will extend to implement any node level logic and event processing
+    - SchedulerApp
+      - An object you will extend to implement any app level logic and event processing
+    - MesosAppListener
+      - An interface you will implement to handle any framework level logic and event processing
+  - Executor
+    - ExecutableApp
+      - An interface you will implement so the catapult library can start your application node
 
 #### Create Scheduler Node Listener
 ```java
+import com.tbouvier.scheduler.Protos;
+
 public class MyNode extends SchedulerNode {
+   
+   public MyNode(Protos.SchedulerNodeInfo nodeInfo){
+      /*initialize parent obj with nodeInfo*/
+      super(nodeInfo);
+   }
 
    @Override
    public void failed(AppDriver appDriver){
@@ -58,8 +69,18 @@ The schedulerNode callbacks are events for pretty much what they look like they'
 ```java
 public class MyApplication extends SchedulerApp {
   
+   public MyApplication(){
+      super("my-app-name");
+   }
+  
    @Override
    public void initialized(AppDriver appDriver, Protos.AppID appID){
+   
+      Protos.ContainerLiteInfo.Builder containerLiteInfo = Protos.ContainerLiteInfo.newBuilder();
+   
+     /*create nodeInfo*/
+     Protos.SchedulerNodeInfo nodeInfo = Protos.SchedulerNodeInfo.newBuilder()
+   
      /*Start launching nodes*/
      MyNode node = new MyNode();
      appDriver.launchNode(node);
