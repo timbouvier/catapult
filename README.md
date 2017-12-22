@@ -1,7 +1,7 @@
 # ![catapult](media/catapult.png)
 Create a distributed, fault tolerant **application as a service** by implementing **3 callback functions**. Catapult is a mesos framework SDK that abstracts the scheduler and executor interfaces, and handles persistent storage for application state. Catapult allows the developer to define with what level of detail they want to control their application.
 
-# Prerequisites
+# Build Requirements
 - java
 - maven
 
@@ -151,11 +151,13 @@ public class MyFrameworkListener implements MesosAppListener {
 Once the connected callback fires you can safely assume the library is initialized an ready to receive API callins.
 
 #### Putting it All Together
+
+##### Scheduler Main
 ```java
 import com.verizon.mesos.MesosAppFramework;
 import com.tbouvier.mesos.scheduler.Protos;
 
-public class Main {
+public class SchedulerMain {
 
   public static void main(String[] args){
     Protos.SchedulerConfig schedulerConfig = Protos.SchedulerConfig.newBuilder()
@@ -174,7 +176,16 @@ public class Main {
   }
 }
 ```
-Supply your mesos environment information using schedulerConfig and mesos app listener object, call run() and you ready to go.
+
+##### Executor Main
+```java
+public class ExecutorMain {
+
+  public static void main(String[] args){
+     new MesosApplicationFrameworkExecutor(new MariaDBExecutor()).run();
+  }
+}
+```
 
 
 
