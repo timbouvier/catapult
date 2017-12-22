@@ -122,7 +122,7 @@ public class Main {
   }
 }
 ```
-Supply your mesos environment information and mesos app listener object, call run() and you good to go.
+Supply your mesos environment information using schedulerConfig and mesos app listener object, call run() and you ready to go.
 
 
 
