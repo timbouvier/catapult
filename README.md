@@ -15,8 +15,8 @@ make install
 After the install completes you can then import the catapult library to your project using a maven dependency.
 ```xml
 <dependency>
-   <groupId>com.verizon.mesos</groupId>
-   <artifactId>vzdb</artifactId>
+   <groupId>com.tbouvier.mesos</groupId>
+   <artifactId>sdk</artifactId>
    <version>1.0-SNAPSHOT</version>
 </dependency>
 ```
