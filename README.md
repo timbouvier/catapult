@@ -25,6 +25,37 @@ The major components of each catapult application are outlined below.
   - Executor
     - ExecutableApp
       - An interface you will implement so the catapult library can start your application node
+ 
+#### Create ExecutableApp
+```java
+public class MyExecutableApp implements ExecutableApp {
+
+  @Override
+  public void restart(){
+    ...
+  }
+  
+  @Override
+  public int getExitStatus() {
+    ...
+  }
+  
+  @Override
+  public void message(AppExecutor appExecutor, byte[] message){
+    ...
+  }
+  
+  @Override
+  public void kill(){
+    ...
+  }
+  
+  @Override
+  public void run(AppExecutor executor){
+    ...
+  }
+}
+```
 
 #### Create Scheduler Node Listener
 ```java
@@ -63,7 +94,7 @@ public class MyNode extends SchedulerNode {
    }
 }
 ```
-The schedulerNode callbacks are events for pretty much what they look like they're events for. The message callback is a communication channel between the SchedulerNode and the AppExecutor (what's running on the physical node).
+The schedulerNode callbacks are events for pretty much what they look like they're events for. The message callback is a communication channel between the SchedulerNode and the ExecutableApp (what's running on the physical node).
 
 #### Create Scheduler Application Listener
 ```java
