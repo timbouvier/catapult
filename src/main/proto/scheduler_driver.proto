@@ -1,0 +1,271 @@
+syntax = "proto2";
+
+package tbouvier.scheduler_task;
+
+option java_package = "com.tbouvier.mesos.scheduler";
+option java_outer_classname = "Protos";
+
+import "mesos.proto";
+
+////////////////////////////////////////////////////////////////
+/////////////// SchedulerTask Objects //////////////////////////
+///////////////                       //////////////////////////
+////////////////////////////////////////////////////////////////
+
+message SchedulerConstraint {
+
+    enum Type {
+        NONE = 0;
+        RUN_ON_HOST_YES = 1;
+        RUN_ON_HOST_NO = 2;
+        RUN_ON_SLAVE_YES = 3;
+        RUN_ON_SLAVE_NO = 4;
+        ATTRIBUTE_LIKE = 5;
+        ATTRIBUTE_NOT_LIKE = 6;
+    }
+
+    required Type type = 1;
+    required string value = 2;
+
+    //for attribute like constraints
+    optional string attribute = 3;
+}
+
+message SchedulerTask {
+
+    enum State {
+        UNKNOWN = 0;
+        SCHEDULED = 1;
+        SUBMITTED = 2;
+        RUNNING = 3;
+        COMPLETE = 4;
+        FAILED = 5;
+        KILLED = 6;
+        LOST = 7;
+        ERROR = 8;
+        EVICTED = 9;
+    }
+
+    required AppID appId = 1;
+    required NodeID nodeId = 2;
+
+    //mesos task info for launching
+    //the SchedulerTask
+    required mesos.TaskInfo taskInfo  = 3;
+
+    //offer that this task is bound to
+    optional mesos.Offer offer = 4;
+
+    //current status of the task
+    optional mesos.TaskStatus status = 5;
+
+    //contraints to be applied to the SchedulerTask
+    repeated SchedulerConstraint constraints = 6;
+}
+
+
+
+////////////////////////////////////////////////////////////////
+/////////////// SchedulerConfig objects ////////////////////////
+///////////////                         ////////////////////////
+////////////////////////////////////////////////////////////////
+
+message ZookeeperInfo {
+    required string address = 1;
+    required string rootNode = 2;
+
+    //additional zk config details
+}
+
+message DockerRegistryInfo {
+    required string endpoint = 1;
+
+    //any uris needed for docker (ie. login credentials)
+    repeated mesos.CommandInfo.URI uris = 2;
+}
+
+message MesosInfo {
+
+    required string address = 1;//{ip address}:{port} of mesos leader OR {zookeeper cluster address}/mesos
+
+    //default 2 week failover reregistration timeout
+    optional int32 failoverTimeout = 3 [default = 1209600];
+
+}
+
+message SchedulerConfig {
+    optional string host = 1; //default will be done by getting host IP internally
+    required string frameworkName = 2;
+    required ZookeeperInfo zooKeeperInfo = 3;
+    required MesosInfo mesosInfo = 4;
+
+    optional DockerRegistryInfo dockerRegistryInfo = 5;
+
+    optional int32 pollThreads = 6 [default = 5];
+}
+
+
+
+
+
+///////////////////////////////////////////////////////////////
+/////////////// Application driver objects/////////////////////
+///////////////                           /////////////////////
+///////////////////////////////////////////////////////////////
+
+message AppID {
+    required string value = 1;
+}
+
+message NodeID {
+    required string value = 1;
+}
+
+//representation of a volume created by the
+//AppDriver volume service plugin
+message SchedulerVolume {
+    optional string name = 1;//FIXME: make this required
+    required string containerMountPoint = 2;
+
+    optional mesos.Volume.Mode mode = 3 [default = RW];
+
+    //if its a host mount
+    optional string hostMountPoint = 5;
+
+    //size in kb
+    optional int64 size = 6;
+
+    //optional id associated with the volume
+    optional string id = 7;
+
+    //any node constraints associated with the volume
+    repeated SchedulerConstraint constraints = 8;
+
+    //if the volume has a volume driver..
+    optional string volumeDriver = 9;
+}
+
+message ContainerLiteInfo {
+    required string dockerImage = 1;
+
+    //volumes provided by appdriver plugin
+    repeated SchedulerVolume volumes = 2;
+
+    //environment vars
+
+    //generic constraints for this node
+    repeated SchedulerConstraint contstraints = 5;
+}
+
+//FIXME: allow contraints here?
+message SchedulerContainer {
+
+    required double cpus = 1;
+    required int32 memory = 2;
+    required string name = 3;
+    optional bool executor = 4 [default = false];
+
+    //User can choose to fillin containerinfo
+    //OR set docker image + uris (if applicable) AND accept defaults
+    optional  mesos.ContainerInfo containerInfo = 14;
+
+    //abbreviated containerInfo catered to docker
+    optional ContainerLiteInfo containerLiteInfo = 15;
+
+    //user can specify uris OR schedulerConfig info will be defaulted to
+    //(if any)
+    repeated mesos.CommandInfo.URI uris = 16;
+}
+
+//appid + nodeid fields are optional so app user can create nodes without
+//having to set these fields. in either case appdriver will
+//overwrite these fields
+message SchedulerNodeInfo {
+    optional AppID appId = 1;//appid that this node is bound to
+    optional NodeID nodeId = 2;
+    optional string address = 3;//could be dns or ip
+
+    enum STATE {
+        UNKNOWN = 0;
+        WAITING_DEPLOY = 1;
+        DEPLOYING = 2;
+        RUNNING = 3;
+        WAITING_REMOVE = 4;
+        REMOVING = 5;
+        INITIAL_FLUSH_FAILED = 6;
+    }
+
+    optional STATE state = 4;
+
+    //user can either use schedulerTask
+    //OR the simplified container + volumes message
+    optional SchedulerTask schedulerTask = 5;
+    optional SchedulerContainer schedulerContainer = 6;
+
+    //any data that the user of the fw wants to store
+    optional bytes userData = 7;
+
+}
+
+message SchedulerAppInfo {
+    required AppID appId = 1;
+    optional string name = 2;
+    repeated SchedulerNodeInfo nodes = 3;
+
+    //more common app specifics here
+}
+
+
+
+///////////////////////////////////////////////////////////////
+/////////////// Application driver objects/////////////////////
+///////////////                           /////////////////////
+///////////////////////////////////////////////////////////////
+
+message FrameworkMessage {
+    required mesos.TaskID taskId = 1;
+
+    //user's message
+    required bytes data = 2;
+}
+
+message Action {
+    enum TYPE {
+        UNKNOWN = 0;
+        RESTART_SERVICE = 1;
+        MOVE_NODE = 2;
+    }
+}
+
+message Reason {
+    enum TYPE {
+        UNKNOWN = 1;
+        MEMORY_LIMIT_APPROACHING = 2;
+        CPU_LIMIT_APPROACHING = 3;
+    }
+}
+
+message HealthInfo {
+    required bool isHealthy = 1;
+
+    //why we are unhealthy
+    optional Reason reason = 2;
+
+    //course of action the scheduler should take
+    optional Action action = 3;
+}
+
+message NodeStatus {
+
+    required NodeID nodeId = 1;
+
+    required SchedulerNodeInfo.STATE state = 2;
+
+    required HealthInfo healthInfo = 3;
+}
+
+
+
+
+
+
