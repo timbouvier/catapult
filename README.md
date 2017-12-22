@@ -182,7 +182,7 @@ public class SchedulerMain {
 public class ExecutorMain {
 
   public static void main(String[] args){
-     new MesosApplicationFrameworkExecutor(new MariaDBExecutor()).run();
+     new MesosApplicationFrameworkExecutor(new MyExecutableApp()).run();
   }
 }
 ```
