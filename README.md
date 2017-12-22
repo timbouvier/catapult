@@ -1,5 +1,5 @@
 # ![catapult](media/catapult.png)
-Create a distributed, fault tolerant **application as a service** by implementing **3 callback functions**. Catapult is a mesos framework SDK that abstracts the scheduler and executor interfaces, and handles persistent storage for application state. Catapult allows the developer to define with what level of detail they want to control their application.
+Create a distributed, fault tolerant **application as a service** by implementing **15 callback functions**. Catapult is a mesos framework SDK that abstracts the scheduler and executor interfaces, and handles persistent storage for application state. Catapult turns your application into an **application as a service** allowing you to spin 100s or 1000s of instances of your application. And the best part is, you don't have to worry about any of the multitenantcy logic (although you can still impose specific scheduling constraints if you want to).
 
 # Build Requirements
 - java
