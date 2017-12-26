@@ -213,6 +213,9 @@ public class ExecutorMain {
 }
 ```
 
+# Deployment Requirements
+- Apache Mesos
+- Apache Zookeeper
 
 
 
