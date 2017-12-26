@@ -22,7 +22,7 @@ After the install completes you can then import the catapult library to your pro
 ```
 
 # Usage
-The major components of each catapult application are outlined below. 
+The two main components to any mesos framework are the scheduler and executor. The scheduler is what orchestrates the application deployment and event handling, while the executor is where the application node physically runs. The scheduler and executor components each are made up of a few sub-components detailed below.
   - Scheduler
     - SchedulerNode
       - An object you will extend to implement any node level logic and event processing
