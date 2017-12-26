@@ -117,13 +117,29 @@ public class MyApplication extends SchedulerApp {
    @Override
    public void initialized(AppDriver appDriver, Protos.AppID appID){
    
-      Protos.ContainerLiteInfo.Builder containerLiteInfo = Protos.ContainerLiteInfo.newBuilder();
+     /*containerLite info is a user friendly way of spinning docker containers + volume api supports
+       local host mounts as well as docker volumes*/
+     Protos.ContainerLiteInfo.Builder containerLiteInfo = Protos.ContainerLiteInfo.newBuilder()
+                .setDockerImage("executor-docker-image")
+                .addVolumes(Protos.SchedulerVolume.newBuilder()
+                        .setHostMountPoint("mesos-shared-lib-path")
+                        .setContainerMountPoint("mesos-shared-lib-path")
+                        .setMode(org.apache.mesos.Protos.Volume.Mode.RO)
+                        .build())
    
      /*create nodeInfo*/
      Protos.SchedulerNodeInfo nodeInfo = Protos.SchedulerNodeInfo.newBuilder()
+                .setSchedulerContainer( Protos.SchedulerContainer.newBuilder()
+                        .setName("node-name")
+                        .setCpus(1.0)
+                        .setMemory(1024)
+                        .setExecutor(true)//if this is a custom executor or not
+                        .setContainerLiteInfo(containerLiteInfo.build())
+                        .build())
+                .build();
    
      /*Start launching nodes*/
-     MyNode node = new MyNode();
+     MyNode node = new MyNode(nodeInfo);
      appDriver.launchNode(node);
    }
    
