@@ -1,0 +1,5 @@
+ZOOKEEPER_ADDRESS=$(curl leader.mesos:8181/exhibitor/v1/cluster/status | jq .[].hostname | xargs echo | sed -e "s/ /:2181,/g"):2181
+MESOS_LIBRARY_PATH=/opt/mesosphere
+REGISTRY_ENDPOINT=docker.io
+EXECUTOR_IMAGE=catapult-example
+IMAGE_TAG=0.01

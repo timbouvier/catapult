@@ -1,0 +1,32 @@
+{
+        "id": "/catapult-example",
+        "cpus":.1,
+        "mem": 10,
+        "instances": 1,
+        "container": {
+                     "type": "DOCKER",
+                     "volumes": [
+                               {
+                                       "containerPath": "{MESOS_LIBRARY_PATH}",
+                                       "hostPath": "{MESOS_LIBRARY_PATH}",
+                                       "mode": "RO"
+                               }
+                             ],
+                     "docker": {
+                               "image": "{REGISTRY_ENDPOINT}/{EXECUTOR_IMAGE}:{EXECUTOR_TAG}",
+                               "network": "BRIDGE",
+                               "forcePullImage": true
+                            },
+                  },
+        "env": {
+              "LD_LIBRARY_PATH": "/usr/lib:{MESOS_LIBRARY_PATH}/lib",
+              "ZOOKEEPER_ADDRESS": "{ZOOKEEPER_ADDRESS}",
+              "REGISTRY_ENDPOINT": "{REGISTRY_ENDPOINT}",
+              "EXECUTOR_IMAGE": "{EXECUTOR_IMAGE}",
+              "IMAGE_TAG": "{IMAGE_TAG}",
+              "MESOS_LIBRARY_PATH": "{MESOS_LIBRARY_PATH}"
+            }
+        "uris": [
+                "file:///docker.tar.gz"
+             ]
+}

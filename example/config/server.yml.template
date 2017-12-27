@@ -1,0 +1,20 @@
+zookeeperAddress: {ZOOKEEPER_ADDRESS}
+
+registryEndpoint: {REGISTRY_ENDPOINT}
+
+schedulerFailoverTimeout: 1234567
+
+zookeeperRootNode: /catapult-example
+
+exampleExecutorImage: {REGISTRY_ENDPOINT}/{EXECUTOR_SERVICE}:{IMAGE_TAG}
+
+mesosLibraryPath: {MESOS_LIBRARY_PATH}
+
+uris: ['file:///docker.tar.gz']
+
+server:
+  type: simple
+  applicationContextPath: /v1
+  connector:
+    type: http
+    port: 8080
