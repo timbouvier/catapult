@@ -6,4 +6,4 @@ container: build
 build:
 	mvn package && mv target/*.jar container && cp config/server.yml.template container && cp config/environment container
 clean:
-	mvn clean && rm *~ container/*.jar container/*~
+	mvn clean && rm -f *~ container/*.jar container/*~
