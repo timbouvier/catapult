@@ -212,7 +212,7 @@ public class ExecutorMain {
   }
 }
 ```
-This may seem like a lot to swallow at first glance. It is. Keep at it, play around with it, and checkout the [full example](example) which uses dropwizard for API endpoints, and docker for the scheduler, executor components!
+After you familiarize yourself with the general architecture of catapult, please checkout the [full example](example) which uses dropwizard for the app deployer API endpoints, and docker containers for the scheduler, executor components!
 
 # Deployment Requirements
 - Apache Mesos
