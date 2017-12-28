@@ -1,4 +1,4 @@
-# Example Catapult Application
+# Example Application
 This example uses the web framework dropwizard for api endpoints for the application deployer as well as docker for scheduler and executor component containers.
 
 # Build
