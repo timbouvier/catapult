@@ -6,7 +6,7 @@ You can build the example application from the repo root or from this directory.
 
 #### From repo root
 ```shell
-make example
+make example-docker
 ```
 
 #### From this directory
