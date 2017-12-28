@@ -18,7 +18,7 @@ make container
 You'll need to configure a few environment variables specific to your cluster in the [environment file](./config/environment) file. A good practice is to store a file with cluster specific environment variables on each of your mesos clusters.
 
 # Deployment
-To deploy the example applicaton you can copy the source from [this directory](./) to a node in your mesos cluster and run the [deploy script](./scripts/deploy.sh).
+To deploy the example applicaton you can copy the source from [this directory](./) to a node in your mesos cluster and run the [deploy script](./scripts/deploy.sh). The current deployment uses Marathon to deploy the framework. Coming soon clustered systemd deployment.
 ```shell
 cd scripts/
 ./deploy.sh
