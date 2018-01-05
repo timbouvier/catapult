@@ -182,7 +182,7 @@ Once the connected callback fires you can safely assume the library is initializ
 
 ##### Scheduler Main
 ```java
-import com.verizon.mesos.MesosAppFramework;
+import com.tbouvier.mesos.MesosAppFramework;
 import com.tbouvier.mesos.scheduler.Protos;
 
 public class SchedulerMain {
